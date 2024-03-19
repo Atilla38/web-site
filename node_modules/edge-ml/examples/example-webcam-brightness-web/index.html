@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Webcam Brightness</title>
+    <style>
+        #brightness {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="../../dist/index.browser.js"></script>
+</head>
+
+<body>
+    <h1>Webcam Brightness</h1>
+    <div id="brightness"></div>
+    <video id="video" width="640" height="480" autoplay></video>
+    <br>
+    <input type="text" id="apiKey" placeholder="Enter your API key">
+    <button onclick="startStopRecording()">Record</button>
+    <div id="recording-indicator"></div>
+    <script>
+        // Global variables
+        var startTime = undefined;
+        var collector = undefined;
+        var isRecording = false;
+
+        var apiKeyInput = document.getElementById('apiKey');
+
+        // Function to calculate the average brightness of an image
+        function calculateAverageBrightness(imageData) {
+            var pixels = imageData.data;
+            var numPixels = imageData.width * imageData.height;
+            var totalBrightness = 0;
+
+            // Loop through each pixel and sum the brightness values
+            for (var i = 0; i < numPixels; i++) {
+                var r = pixels[i * 4];
+                var g = pixels[i * 4 + 1];
+                var b = pixels[i * 4 + 2];
+                var brightness = (r + g + b) / 3;
+                totalBrightness += brightness;
+            }
+
+            // Calculate the average brightness
+            var averageBrightness = totalBrightness / numPixels;
+            return averageBrightness;
+        }
+
+        // Function to update the brightness information on the webpage
+        function updateBrightness() {
+            var video = document.getElementById('video');
+            var canvas = document.createElement('canvas');
+            var context = canvas.getContext('2d');
+
+            // Set the canvas dimensions to match the video stream
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Draw the video frame onto the canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Get the image data from the canvas
+            var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+            // Calculate the average brightness
+            var averageBrightness = calculateAverageBrightness(imageData);
+
+            // Update the brightness information on the webpage
+            var brightnessElement = document.getElementById('brightness');
+            brightnessElement.textContent = 'Average Brightness: ' + averageBrightness.toFixed(2);
+
+            if (isRecording) {
+                console.log("adding brightness: ", averageBrightness);
+                collector.addDataPoint("brightness", averageBrightness)
+            }
+
+
+            // Schedule the next update
+            setTimeout(updateBrightness, 200); // 5 times per second
+        }
+
+        async function startStopRecording() {
+            if (isRecording) {
+                isRecording = false;
+                await collector.onComplete();
+            }
+            else {
+                collector = await edgeML.datasetCollector("http://localhost:3004", apiKeyInput.value, "testName", true, ["brightness"], { "min": 0, "max": 255 })
+                startTime = Date.now();
+                isRecording = true;
+            }
+        }
+
+
+        // Get access to the webcam stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                var video = document.getElementById('video');
+                video.srcObject = stream;
+                video.onloadedmetadata = function (e) {
+                    video.play();
+                    updateBrightness();
+                };
+            })
+            .catch(function (err) {
+                console.error('Error accessing the webcam: ', err);
+            });
+    </script>
+</body>
+
+</html>
