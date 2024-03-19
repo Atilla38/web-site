@@ -2,10 +2,10 @@
   "name": "css22",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.html",
+  "main": "index.html",
   "scripts": {
-    "start": "parcel src/index.html --open",
-    "build": "parcel build src/index.html"
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.13.0",
