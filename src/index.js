@@ -1,7 +1,7 @@
-require("bootstrap");
-require("@fortawesome/fontawesome-free/css/all.css");
-require("bootstrap/dist/css/bootstrap.css");
-require("./styles.scss");
+import "bootstrap";
+import "@fortawesome/fontawesome-free/css/all.css";
+import "bootstrap/dist/css/bootstrap.css";
+import "./styles.scss";
 
 const MobileDetect = require("mobile-detect");
 const EdgeML = require("edge-ml").default;
