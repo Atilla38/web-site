@@ -3,16 +3,17 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "./styles.scss";
 
+const MobileDetect = require("mobile-detect");
+const EdgeML = require("edge-ml").default;
+
+console.log(EdgeML);
+
+
 document.getElementById("subject").value = Math.floor(
     (1 + Math.random()) * 0x10000,
 ).toString(16);
 
 var defaultTags = {};
-
-const MobileDetect = require("mobile-detect");
-const EdgeML = require("edge-ml").default;
-
-console.log(EdgeML);
 
 const mobile = new MobileDetect(window.navigator.userAgent);
 
