@@ -66,15 +66,34 @@ const sensors = {
 async function start_recording() {
   for (const [sensor, fun] of Object.entries(sensors)) {
     try {
-      fun.collector = await EdgeML.datasetCollector(
-        "https://app.edge-ml.org",
-        "2092ed5c5a73d0edd85d26cf1e429a74",
-        sensor,
-        false,
-        [fun.listener.name, fun.listener.name],
-        { participantId: document.getElementById("subject").value },
-        "activities_" + document.getElementById("label").value,
-      );
+      if (sensor == "devicemotion") {
+        fun.collector = await EdgeML.datasetCollector(
+          "https://app.edge-ml.org",
+          "2092ed5c5a73d0edd85d26cf1e429a74",
+          sensor,
+          false,
+          ["x0", "y0", "z0", "x", "y", "z", "alpha", "beta", "gamma"],
+          Object.assign(
+            { participantId: document.getElementById("subject").value },
+            defaultTags,
+          ),
+          "activities_" + document.getElementById("label").value,
+        );
+      } else {
+        fun.collector = await EdgeML.datasetCollector(
+          "https://app.edge-ml.org",
+          "2092ed5c5a73d0edd85d26cf1e429a74",
+          sensor,
+          false,
+          ["alpha", "beta", "gamma"],
+          Object.assign(
+            { participantId: document.getElementById("subject").value },
+            defaultTags,
+          ),
+          "activities_" + document.getElementById("label").value,
+        );
+      }
+      window.addEventListener(sensor, fun.listener, true);
     } catch (e) {
       // Error occurred, cannot use the collector as a function to upload
       console.log(e);
