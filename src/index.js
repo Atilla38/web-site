@@ -9,7 +9,7 @@ const EdgeML = require("edge-ml").default;
 console.log(EdgeML);
 
 document.getElementById("subject").value = Math.floor(
-  (1 + Math.random()) * 0x10000,
+  (1 + Math.random()) * 0x10000
 ).toString(16);
 
 var defaultTags = {};
@@ -36,7 +36,7 @@ const sensors = {
           beta: evt.beta,
           gamma: evt.gamma,
         },
-        evt.timeStamp + performance.timing.navigationStart,
+        evt.timeStamp + performance.timing.navigationStart
       );
     },
   },
@@ -57,7 +57,7 @@ const sensors = {
           beta: evt.rotationRate.beta,
           gamma: evt.rotationRate.gamma,
         },
-        evt.timeStamp + performance.timing.navigationStart,
+        evt.timeStamp + performance.timing.navigationStart
       );
     },
   },
@@ -69,28 +69,28 @@ async function start_recording() {
       if (sensor == "devicemotion") {
         fun.collector = await EdgeML.datasetCollector(
           "https://app.edge-ml.org",
-          "2092ed5c5a73d0edd85d26cf1e429a74",
+          "d9647bfc4b3283f4b233b56fb2b43a33",
           sensor,
           false,
           ["x0", "y0", "z0", "x", "y", "z", "alpha", "beta", "gamma"],
           Object.assign(
             { participantId: document.getElementById("subject").value },
-            defaultTags,
+            defaultTags
           ),
-          "activities_" + document.getElementById("label").value,
+          "activities_" + document.getElementById("label").value
         );
       } else {
         fun.collector = await EdgeML.datasetCollector(
           "https://app.edge-ml.org",
-          "2092ed5c5a73d0edd85d26cf1e429a74",
+          "d9647bfc4b3283f4b233b56fb2b43a33",
           sensor,
           false,
           ["alpha", "beta", "gamma"],
           Object.assign(
             { participantId: document.getElementById("subject").value },
-            defaultTags,
+            defaultTags
           ),
-          "activities_" + document.getElementById("label").value,
+          "activities_" + document.getElementById("label").value
         );
       }
       window.addEventListener(sensor, fun.listener, true);
