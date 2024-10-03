@@ -10,7 +10,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.13.0",
     "bootstrap": "4.6.1",
-    "edge-ml": "4.0.0",
+    "edge-ml": "4.0.1",
     "jquery": "3.6.0",
     "mobile-detect": "1.4.5",
     "package.json": "^2.0.1",
